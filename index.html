@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cywreck Chatbot</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <nav class="navbar">
+        <h1 class="h12">AI DEBUGGER</h1>
+        <h1 class="h1">Code Debug ChatBot</h1>
+        <button class="open-btn" onclick="openSidebar()">☰</button>
+    
+    </nav>
+    <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+        
+        <a href="#">Home</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact Us</a>
+    </div>
+
+    <div class="chatarea">
+        
+        <div class="chatarea1">
+            <!--<div class="botmsg">
+
+                <h3 class="botmsg1">Ask Me Anything..</h2>
+            </div>-->
+            <div class="usermsg">
+                
+            </div>
+            <div style="align-items: center; display: flex; flex-wrap: wrap; justify-content: space-between;">
+                <textarea name="" id="inputarea" placeholder="TYpe Your Code Here..."></textarea>
+                <button class="btn" >Send</button>
+            </div>
+        <!--<textarea id="codeInput" rows="5" placeholder="Enter your code here..."></textarea>
+        <button id="submitBtn">Check Vulnerability</button>
+        <div class="response" id="responseArea"></div>-->
+    </div>
+
+    <script>
+        var btn=document.querySelector(".btn")
+        var botmsg=document.querySelector(".botmsg")
+        var usermsg=document.querySelector(".usermsg")
+        document.querySelector(".btn").addEventListener("click", () => {
+            const codeSnippet = document.getElementById("inputarea").value;
+            if (codeSnippet) {
+                var message=document.querySelector("#inputarea")
+                message=message.value
+                var messageelement=document.createElement("p")
+                messageelement.classList.add("usermsg1")
+                messageelement.textContent=message
+                usermsg.appendChild(messageelement)
+                fetch('/check_vulnerability', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code_snippet: codeSnippet })
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    var messageelement1=document.createElement("div")
+                    messageelement1.classList.add("botmsg1")
+                    
+                    messageelement1.innerHTML= `<h1>Chat Bot:</h1>
+                        <p><strong>Detected Vulnerability:</p> ${data.detected_vulnerability}</h3>
+                        ${data.explanation ? `<p><strong>Explanation:</p> ${data.explanation}</h3>` : ''}
+                        ${data.suggested_fix ? `<p><strong>Suggested Fix:</strong><p>${data.suggested_fix}</pre></h3>` : ''}
+                    `;
+                    usermsg.appendChild(messageelement1)
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        });
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.querySelector(".chatarea").style.left="260px"}
+            function closeSidebar() {
+                document.getElementById("sidebar").style.width = "0";
+                document.querySelector(".chatarea").style.left="10px"}
+    </script>
+    
+    <style>
+        .sidebar {
+            height: 100vh;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #333;
+            overflow-x: hidden;
+            transition: width 0.5s; /* Transition for width */
+            padding-top: 60px;
+            z-index: 1000;
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 22px;
+            color: white;
+            display: block;
+            transition: background-color 0.3s; /* Transition for hover */
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .sidebar .close-btn {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+        .sidebar .toggle-btn {
+            padding: 10px;
+            background-color: transparent;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            margin: 20px 0;
+            display: block;
+            width: fit-content;
+            margin-left: 15px;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .navbar{
+
+            z-index: 2;
+            top: 0;
+            left: 0;
+            margin: 0;
+            position: fixed;
+            width: 100%;
+            height: 30px;
+            padding: 10px;
+            
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            background-color: rgb(255, 255, 255);
+        }
+        .chatarea{
+            top: 60px;
+            left: 0;
+            margin: 8px;
+            background-color:rgb(109, 108, 108) ;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border-radius: 10px;
+            z-index: 1;
+            border: 2px;
+            transition:0.3s;
+            box-shadow: rgba(0, 0, 0, 0.35) ;
+        }
+        .h12{
+            font-weight: 550;
+            top: -10px;
+            position: absolute;
+        }
+        .h1{
+            left: 40%;
+            top: -10px;
+            position: absolute;
+            text-align: center;
+            font-weight: 550;
+            color: rgb(157, 84, 157);
+        }
+        .container {
+            width: 80%;
+            position:absolute;
+            top:50px;
+            padding: 20px;
+            max-width: 800px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            color: #5c67d6;
+        }
+        .chatbox {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .input-box {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+        
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #eef1fa;
+        }
+        .open-btn {
+            font-size: 20px;
+            cursor: pointer;
+            
+            background-color: rgb(255, 255, 255);
+            border: none;
+            top:-10px;
+            padding: 10px 15px;
+            margin: 15px;
+            border-radius: 5px;
+            position: absolute;
+            right: 20px; /* Adjusted to position it on the left */
+        }
+        .open-btn:hover {
+            background-color: #4754c7;
+        }
+        .chatarea1{
+            margin-top: 40px;
+            background-color: rgb(109, 108, 108);
+            border: 2px;
+            z-index: 2;
+            top: 40px;
+            bottom: 60px;
+            left: 30px;
+            right: 30px;
+            position: absolute;
+            border-radius: 5px;
+            border: none;
+            border-radius: 10px;
+            color: #eee5e5;
+        }
+        .botmsg1{
+            width: fit-content;
+            background-color: rgb(100, 98, 98);
+            border-radius: 10px;
+            margin: 10px;
+            padding: 5px;
+            text-align: left;
+        }
+        .usermsg1{
+            
+             /* Ensures the text inside the block is left-aligned */
+              padding: 5px;
+              background-color: rgb(100, 98, 98);
+              border-radius: 5px;
+              margin: 10px;
+        }
+        .usermsg{
+            width: 100%;
+              text-align: right;
+            height: 400px;
+            overflow-y: scroll;
+        }
+        #inputarea{
+            top: 425px;
+            background-color: rgb(216, 213, 213);
+            z-index: 1;
+            width:87%;
+            bottom: 60px;
+            
+            
+            position: absolute;
+            border: none;
+            border-radius: 10px;
+            
+            overflow-y: scroll;
+        }
+        
+        .btn {
+            top: 460px;
+            z-index: 1;
+            right:0px;
+            border-radius: 10px;
+            
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 15px;
+            padding-right: 15px;
+            background-color: rgb(83, 81, 81);
+            position: absolute;
+            border: 0;
+            cursor: pointer;
+          appearance: button;
+          background-color: #000;
+          background-image: none;
+          border: 1px solid #000;
+          border-radius: 4px;
+          box-shadow: #fff 4px 4px 0 0,#000 4px 4px 0 1px;
+          box-sizing: border-box;
+          color: #fff;
+          cursor: pointer;
+          
+          font-family: ITCAvantGardeStd-Bk,Arial,sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 20px;
+          
+          overflow: visible;
+          padding: 12px 40px;
+          text-align: center;
+          text-transform: none;
+          touch-action: manipulation;
+          user-select: none;
+          -webkit-user-select: none;
+          vertical-align: middle;
+          white-space: nowrap;
+        }
+        
+        .button-50:focus {
+          text-decoration: none;
+        }
+        
+        .button-50:hover {
+          text-decoration: none;
+        }
+        
+        .button-50:active {
+          box-shadow: rgba(0, 0, 0, .125) 0 3px 5px inset;
+          outline: 0;
+        }
+        
+        .button-50:not([disabled]):active {
+          box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+          transform: translate(2px, 2px);
+        }
+        
+        
+        @media (min-width: 768px ) {
+            .btn {
+              padding: 12px 50px;
+            }
+            #inputarea{
+                
+                position: absolute;
+            }
+          }
+        @media (max-width:768px){
+            #inputarea{
+                width: 70%;
+                
+            }
+            .btn {
+                left:73%
+              }
+        }
+    </style>
+</body>
+</html>
+
